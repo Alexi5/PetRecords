@@ -113,7 +113,7 @@ const PetProfile = () => {
             </section>
 
             {editProfile && (
-                <ModalComponent isOpen={editProfile} onClose={handleCloseModal} title="Edit Profile">
+                <ModalComponent isOpen={editProfile} onClose={handleCloseModal} label="Edit Profile">
                     <EditProfileForm pet={pet} onClose={handleCloseModal}></EditProfileForm>
                 </ModalComponent>
             )}
