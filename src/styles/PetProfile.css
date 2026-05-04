@@ -14,13 +14,36 @@ section.profile {
   column-gap: 8px;
 }
 
-table {
-  border-collapse: collapse;
+.records-list-container {
+  padding: 0 48px;
+}
+
+.records-table {
   width: 100%;
-  table-layout: fixed;
+  border-collapse: collapse;
+  border: 1px solid #e0e0e0;
+  border-spacing: 0;
+  border-radius: 10px;
+}
+
+.records-table th,
+.records-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+}
+
+.records-table thead tr {
+  text-align-last: center;
+}
+
+.records-table tbody tr {
+  border-top: 1px solid #e0e0e0;
 }
 
 td.actions {
   display: inline-flex;
   column-gap: 4px;
+  border: unset;
+  vertical-align: text-top;
 }

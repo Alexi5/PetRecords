@@ -59,6 +59,8 @@ const PetProfile = () => {
 
     return (
         <>
+            <section className="spacer" />
+
             <h3>Pet Profile</h3>
             <section className="profile">
                 <div className="profile-section-container">
@@ -78,47 +80,51 @@ const PetProfile = () => {
                 <button onClick={() => openEditModal(id)}>Edit Profile</button>
             </section>
 
+            <section className="spacer" />
+
             <section>
                 <div className="records-section">
                     <h3>Record Management</h3>
                     {records && (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Name</th>
-                                    <th>Date Administered</th>
-                                    <th>Reactions</th>
-                                    <th>Severity</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {records.length > 0 && records.map((record, i) => (
-                                <tr key={`record_${i}`}>
-                                    <td>
-                                        <p>{record.type}</p>
-                                    </td>
-                                    <td>
-                                        <p>{record.name}</p>
-                                    </td>
-                                    <td>
-                                        <p>{record.date_given || "unknown"}</p>
-                                    </td>
-                                    <td>
-                                        <p>{record.reactions || null}</p>
-                                    </td>
-                                    <td>
-                                        <p>{record.severity || null}</p>
-                                    </td>
-                                    <td className="actions">
-                                        <button onClick={() => openEditRecordModal(record)}>Edit</button>
-                                        <button onClick={() => handleDelete(record.id)}>Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                        <div className="records-list-container">
+                            <table className="records-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Name</th>
+                                        <th>Date Administered</th>
+                                        <th>Reactions</th>
+                                        <th>Severity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {records.length > 0 && records.map((record, i) => (
+                                    <tr key={`record_${i}`}>
+                                        <td>
+                                            <p>{record.type}</p>
+                                        </td>
+                                        <td>
+                                            <p>{record.name}</p>
+                                        </td>
+                                        <td>
+                                            <p>{record.date_given || "unknown"}</p>
+                                        </td>
+                                        <td>
+                                            <p>{record.reactions || null}</p>
+                                        </td>
+                                        <td>
+                                            <p>{record.severity || null}</p>
+                                        </td>
+                                        <td className="actions">
+                                            <button onClick={() => openEditRecordModal(record)}>Edit</button>
+                                            <button onClick={() => handleDelete(record.id)}>Delete</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                     )}
                 </div>
             </section>
