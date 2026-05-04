@@ -37,7 +37,7 @@ const EditProfileForm = ({ pet, onClose }) => {
             .then(res => res.json())
             .then(data => {
                 console.log('success', data)
-                // onClose();
+                onClose();
             })
             .catch(err => console.log(err));
     }

@@ -59,7 +59,9 @@ db.exec(`
         reactions TEXT,
         severity TEXT CHECK(severity IN ('mild', 'severe')) DEFAULT NULL,
         pet_id INTEGER NOT NULL,
-        FOREIGN KEY (pet_id) REFERENCES pets(id)
+        FOREIGN KEY (pet_id) REFERENCES pets(id),
+        CHECK (type != 'allergy' OR reactions IS NOT NULL),
+        CHECK (type != 'allergy' OR severity IS NOT NULL)
     );
 `);
 

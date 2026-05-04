@@ -68,14 +68,34 @@ app.put('/api/pets/:id', (req, res) => {
 // Create
 // Delete
 
-// records endpoint
-// View
+// RECORDS endpoint
 app.get('/api/records', (req, res) => {
     const petId = req.query.pet_id;
     const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
     res.json(records);
 });
 
+app.put('/api/records/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, type, date_given, reactions, severity } = req.body
+
+    const record = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
+
+    if (!record) return res.status(404).send('No record found with id ' + id);
+
+    // validate allergy
+    const validReactions = reactions || null;
+    const validSeverity = severity || null;
+
+    if(type === 'allergy' && !validReactions && !validSeverity) {
+        return res.status(404).send('Allergy record must include reactions and severity');
+    }
+
+    db.prepare('UPDATE records SET name = ?, type = ?, date_given = ?, reactions = ?,  severity = ? WHERE id = ?').run(name, type, date_given, validReactions, validSeverity, id);
+    const updatedRecord = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
+
+    res.json(updatedRecord);
+});
+
 // Create/Add (pet id)
-// Edit
 // Delete

@@ -4,13 +4,15 @@ import "./styles/PetProfile.css"
 
 import ModalComponent from "./Modal"
 import EditProfileForm from "./EditProfileForm"
+import EditRecordForm from "./EditRecordForm.jsx";
 
 const PetProfile = () => {
     const { id } = useParams();
     const [pet, setPet] = useState(null);
     const [records, setRecords] = useState(null);
     const [editProfile, setEditProfile] = useState(false);
-    const [editProfileId, setEditProfileId] = useState(null);
+    const [showEditRecord, setShowEditRecord] = useState(false);
+    const [editRecord, setEditRecord] = useState(null);
 
     useEffect(() => {
         fetch(`/api/pets/${id}`)
@@ -26,10 +28,9 @@ const PetProfile = () => {
 
     if (!pet) return null;
 
-    const handleEdit = (record) => {
-        //show popup with record info
-        //PUT request
-        console.log('edit record', record)
+    const openEditRecordModal = (record) => {
+        setEditRecord(record)
+        setShowEditRecord(!showEditRecord);
     }
 
     const handleDelete = (record) => {
@@ -39,11 +40,11 @@ const PetProfile = () => {
 
     const openEditModal = (id) => {
         setEditProfile(!editProfile);
-        setEditProfileId(id)
     }
 
     const handleCloseModal = () => {
-        setEditProfile(false)
+        setEditProfile(false);
+        setShowEditRecord(false)
     }
 
     return (
@@ -101,7 +102,7 @@ const PetProfile = () => {
                                         <p>{record.severity || null}</p>
                                     </td>
                                     <td className="actions">
-                                        <button onClick={() => handleEdit(record.id)}>Edit</button>
+                                        <button onClick={() => openEditRecordModal(record)}>Edit</button>
                                         <button onClick={() => handleDelete(record.id)}>Delete</button>
                                     </td>
                                 </tr>
@@ -112,11 +113,13 @@ const PetProfile = () => {
                 </div>
             </section>
 
-            {editProfile && (
-                <ModalComponent isOpen={editProfile} onClose={handleCloseModal} label="Edit Profile">
-                    <EditProfileForm pet={pet} onClose={handleCloseModal}></EditProfileForm>
-                </ModalComponent>
-            )}
+            <ModalComponent isOpen={editProfile} onClose={handleCloseModal} label="Edit Profile">
+                <EditProfileForm pet={pet} onClose={handleCloseModal}></EditProfileForm>
+            </ModalComponent>
+
+            <ModalComponent isOpen={showEditRecord} onClose={handleCloseModal} label="Edit Record">
+                <EditRecordForm record={editRecord} onClose={handleCloseModal}></EditRecordForm>
+            </ModalComponent>
         </>
     )
 }

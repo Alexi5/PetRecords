@@ -1,0 +1,58 @@
+.edit-record-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-field label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-field input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-field input:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 16px;
+    margin-top: 4px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.form-actions button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+.form-actions button:last-child {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+.form-actions button:hover {
+    opacity: 0.85;
+}
