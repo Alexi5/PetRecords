@@ -36,7 +36,6 @@ app.use(cors());
 app.listen(3001, () => console.log('Server running on port 3001'));
 
 // pets endpoint
-// View
 app.get('/api/pets', (req, res) => {
     const pets = db.prepare('SELECT * FROM pets').all();
 
@@ -51,18 +50,29 @@ app.get('/api/pets/:id', (req, res) => {
 
     res.json(pet)
 })
+
+app.put('/api/pets/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, type, dob } = req.body
+
+    const pet = db.prepare('SELECT * FROM pets WHERE id = ?').get(id);
+
+    if (!pet) return res.status(404).send('No pet found with id ' + id);
+
+    db.prepare('UPDATE pets SET name = ?, type = ?, dob = ? WHERE id = ?').run(name, type, dob, id);
+    const updatedPet = db.prepare('SELECT * FROM pets WHERE id = ?').get(id);
+
+    res.json(updatedPet);
+});
+
 // Create
-// Edit
 // Delete
 
 // records endpoint
 // View
 app.get('/api/records', (req, res) => {
-    console.log('HIT RECORDS EP');
     const petId = req.query.pet_id;
     const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
-console.log('petID', petId)
-console.log('api records', records)
     res.json(records);
 });
 
