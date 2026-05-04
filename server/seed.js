@@ -15,7 +15,6 @@ const insertUsers = db.transaction((users) => {
 })
 insertUsers(default_users);
 
-
 const users = db.prepare('SELECT * FROM users').all();
 const pets = [
     { name: 'Demi', type: 'dog', owner_id: users[0].id, dob: "2020-03-15" },
