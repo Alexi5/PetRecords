@@ -1,4 +1,8 @@
-.profile-section {
+section.profile {
+  margin: 0 auto;
+}
+
+.profile-section-container {
   display: flex;
   flex-flow: column;
   row-gap: 4px;
@@ -8,4 +12,15 @@
   display: flex;
   flex-flow: row;
   column-gap: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+td.actions {
+  display: inline-flex;
+  column-gap: 4px;
 }

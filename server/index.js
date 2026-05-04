@@ -19,7 +19,7 @@
 *   name: text,
 *   type: ["vaccine", "allergy"]
 *   date_given: timestamp
-*   reactions: "text"
+*   reactions: text
 *   severity: ["mild", "severe"]
 * }
 */
@@ -57,6 +57,15 @@ app.get('/api/pets/:id', (req, res) => {
 
 // records endpoint
 // View
+app.get('/api/records', (req, res) => {
+    console.log('HIT RECORDS EP');
+    const petId = req.query.pet_id;
+    const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
+console.log('petID', petId)
+console.log('api records', records)
+    res.json(records);
+});
+
 // Create/Add (pet id)
 // Edit
 // Delete

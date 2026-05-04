@@ -55,9 +55,11 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         type TEXT NOT NULL CHECK(type IN ('vaccine', 'allergy')) DEFAULT 'vaccine',
-        date_administer DATETIME DEFAULT CURRENT_TIMESTAMP,
+        date_given DATETIME DEFAULT CURRENT_TIMESTAMP,
         reactions TEXT,
-        severity TEXT CHECK(severity IN ('mild', 'severe')) DEFAULT NULL
+        severity TEXT CHECK(severity IN ('mild', 'severe')) DEFAULT NULL,
+        pet_id INTEGER NOT NULL,
+        FOREIGN KEY (pet_id) REFERENCES pets(id)
     );
 `);
 

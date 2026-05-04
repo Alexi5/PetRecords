@@ -32,4 +32,22 @@ const insertPets = db.transaction((pets) => {
 })
 insertPets(pets);
 
+const allPets = db.prepare('SELECT * FROM pets').all();
+const records = [
+    { name: 'vax1', type: 'vaccine', date_given: "2026-01-15", reactions: null, severity: null, pet_id: allPets[0].id },
+    { name: 'grapes', type: 'allergy', date_given: null, reactions: "hives, rash", severity: ["mild"], pet_id: allPets[0].id },
+    { name: 'vax2', type: 'vaccine', date_given: "2025-08-01", reactions: null, severity: null, pet_id: allPets[0].id },
+    { name: 'flea soap', type: 'allergy', date_given: null, reactions: "rash, redness", severity: ["severe"], pet_id: allPets[1].id },
+    { name: 'vax3', type: 'vaccine', date_given: "2025-04-11", reactions: null, severity: null, pet_id: allPets[1].id },
+    { name: 'pollen', type: 'allergy', date_given: null, reactions: "redness, sneezing", severity: ["mild"], pet_id: allPets[3].id },
+];
+
+const insertIntoRecords = db.prepare('INSERT INTO records (name, type, date_given, reactions, severity, pet_id) VALUES (?, ?, ?, ?, ?, ?)');
+const insertRecords = db.transaction((records) => {
+    for (const record of records) {
+        insertIntoRecords.run(record.name, record.type, record.date_given, record.reactions, record.severity, record.pet_id)
+    }
+});
+insertRecords(records)
+
 console.log('Database seeded successfully!');

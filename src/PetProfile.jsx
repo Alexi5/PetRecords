@@ -1,52 +1,122 @@
-import { useParams } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { useState, useEffect } from 'react'
 import "./styles/PetProfile.css"
+
+import ModalComponent from "./Modal"
+import EditProfileForm from "./EditProfileForm"
 
 const PetProfile = () => {
     const { id } = useParams();
     const [pet, setPet] = useState(null);
+    const [records, setRecords] = useState(null);
+    const [editProfile, setEditProfile] = useState(false);
+    const [editProfileId, setEditProfileId] = useState(null);
 
     useEffect(() => {
         fetch(`/api/pets/${id}`)
             .then(res => res.json())
             .then(pet => setPet(pet))
+
+        fetch(`/api/records?pet_id=${id}`)
+            .then(res => res.json())
+            .then(records => {
+                setRecords(records)
+            })
     }, [id]);
 
     if (!pet) return null;
 
+    const handleEdit = (record) => {
+        //show popup with record info
+        //PUT request
+        console.log('edit record', record)
+    }
+
+    const handleDelete = (record) => {
+        // delete
+        console.log('delete record', record)
+    }
+
+    const openEditModal = (id) => {
+        setEditProfile(!editProfile);
+        setEditProfileId(id)
+    }
+
+    const handleCloseModal = () => {
+        setEditProfile(false)
+    }
+
     return (
         <>
             <h3>Pet Profile</h3>
-            <div className="profile-section">
-                <div className="name-row">
-                    <p>Name</p>
-                    <p>{pet.name}</p>
+            <section className="profile">
+                <div className="profile-section-container">
+                    <div className="name-row">
+                        <p>Name</p>
+                        <p>{pet.name}</p>
+                    </div>
+                    <div className="type-row">
+                        <p>Type</p>
+                        <p>{pet.type}</p>
+                    </div>
+                    <div className="dob-row">
+                        <p>Birthdate</p>
+                        <p>{pet.dob}</p>
+                    </div>
                 </div>
-                <div className="type-row">
-                    <p>Type</p>
-                    <p>{pet.type}</p>
-                </div>
-                <div className="dob-row">
-                    <p>Birthdate</p>
-                    <p>{pet.dob}</p>
-                </div>
-            </div>
+                <button onClick={() => openEditModal(id)}>Edit Profile</button>
+            </section>
 
-            <div className="records-section">
-                <h3>Record Management</h3>
-                {/*<div className="name-row">*/}
-                {/*    <p>Name</p>*/}
-                {/*    <p>{pet.name}</p>*/}
-                {/*</div>*/}
-                {/*<div className="type-row">*/}
-                {/*    <p>Type</p>*/}
-                {/*    <p>{pet.type}</p>*/}
-                {/*</div>*/}
-                {/*<div className="type-dob">*/}
-                {/*    <p>Birthdate</p>*/}
-                {/*    <p>{pet.dob}</p>*/}
-                {/*</div>*/}
-            </div>
+            <section>
+                <div className="records-section">
+                    <h3>Record Management</h3>
+                    {records && (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Date Administered</th>
+                                    <th>Reactions</th>
+                                    <th>Severity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {records.length > 0 && records.map((record, i) => (
+                                <tr key={`record_${i}`}>
+                                    <td>
+                                        <p>{record.type}</p>
+                                    </td>
+                                    <td>
+                                        <p>{record.name}</p>
+                                    </td>
+                                    <td>
+                                        <p>{record.date_given || "unknown"}</p>
+                                    </td>
+                                    <td>
+                                        <p>{record.reactions || null}</p>
+                                    </td>
+                                    <td>
+                                        <p>{record.severity || null}</p>
+                                    </td>
+                                    <td className="actions">
+                                        <button onClick={() => handleEdit(record.id)}>Edit</button>
+                                        <button onClick={() => handleDelete(record.id)}>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            </section>
+
+            {editProfile && (
+                <ModalComponent isOpen={editProfile} onClose={handleCloseModal} title="Edit Profile">
+                    <EditProfileForm pet={pet} onClose={handleCloseModal}></EditProfileForm>
+                </ModalComponent>
+            )}
         </>
     )
 }
