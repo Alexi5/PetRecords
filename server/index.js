@@ -65,6 +65,17 @@ app.put('/api/pets/:id', (req, res) => {
     res.json(updatedPet);
 });
 
+app.delete('/api/pets/:id', (req, res) => {
+    const { id } = req.param
+
+    const pet = db.prepare('SELECT * FROM petws WHERE id = ?').get(id);
+    if (!pet) return res.status(404).send('No pets found with id ' + id);
+
+    db.prepare('DELETE FROM pets WHERE id = ?').run(id);
+
+    res.json({ message: 'Pet deleted successfully.' });
+});
+
 // Create
 // Delete
 
@@ -98,7 +109,7 @@ app.put('/api/records/:id', (req, res) => {
 });
 
 app.delete('/api/records/:id', (req, res) => {
-    const { id } = req.params;
+    const { id } = req.param
 
     const record = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
     if (!record) return res.status(404).send('No record found with id ' + id);
