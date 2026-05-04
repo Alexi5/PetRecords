@@ -1,0 +1,29 @@
+.spacer {
+    padding-bottom: 56px;
+}
+.pets-list-container {
+    padding: 0 48px;
+}
+
+.pets-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e0e0e0;
+    border-spacing: 0;
+    border-radius: 10px;
+}
+
+.pets-table th,
+.pets-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+}
+
+.pets-table thead tr {
+    text-align-last: center;
+}
+
+.pets-table tbody tr {
+    border-top: 1px solid #e0e0e0;
+}
