@@ -97,5 +97,15 @@ app.put('/api/records/:id', (req, res) => {
     res.json(updatedRecord);
 });
 
+app.delete('/api/records/:id', (req, res) => {
+    const { id } = req.params;
+
+    const record = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
+    if (!record) return res.status(404).send('No record found with id ' + id);
+
+    db.prepare('DELETE FROM records WHERE id = ?').run(id);
+
+    res.json({ message: 'Record deleted successfully.' });
+});
+
 // Create/Add (pet id)
-// Delete

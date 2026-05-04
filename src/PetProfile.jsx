@@ -33,9 +33,19 @@ const PetProfile = () => {
         setShowEditRecord(!showEditRecord);
     }
 
-    const handleDelete = (record) => {
-        // delete
-        console.log('delete record', record)
+    const handleDelete = (recordId) => {
+        const confirmDelete = confirm("Are you sure you want to delete this record?")
+        if (confirmDelete) {
+            fetch(`/api/records/${recordId}`, {
+                method: 'DELETE',
+            })
+                .then(res => {
+                    if(res.ok) {
+                        console.log('record deleted')
+                    }
+                })
+                .catch(err => console.log(err));
+        }
     }
 
     const openEditModal = (id) => {
