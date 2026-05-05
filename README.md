@@ -18,12 +18,12 @@ npm install
 Seed the database:
 
 ```bash
-node server/seed.js
+npm run seed
 ```
 
 ## Running in development
 
-The app requires two processes running concurrently: the Express API server and the Vite dev server.
+The app requires running two concurrent processes for backend and frontend: Express server and Vite dev server.
 
 **Terminal 1 — API server** (runs on port 3001):
 ```bash
