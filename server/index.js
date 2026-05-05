@@ -34,8 +34,6 @@ const app = express();
 app.use(express.json())
 app.use(cors());
 
-app.listen(3001, () => console.log('Server running on port 3001'));
-
 // ================ PETS endpoint
 app.get('/api/pets', (req, res) => {
     const pets = db.prepare('SELECT * FROM pets').all();
@@ -118,7 +116,7 @@ app.post('/api/records', (req, res) => {
             message: 'Vaccine record must include date administered'
         });
     }
-    // validate allergy
+
     const validReactions = reactions || null;
     const validSeverity = severity || null;
     if(type === 'allergy' && !(validReactions && validSeverity)) {

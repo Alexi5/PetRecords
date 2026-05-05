@@ -31,8 +31,8 @@ const EditRecordForm = ({ record, petId, onClose, onUpdate }) => {
 
     const validate = () => {
         const validationErrs = {};
-        if (!name.trim()) validationErrs.name = "Name is required";
-        if (!type.trim()) validationErrs.type = "Type is required";
+        if (!name.trim()) validationErrs.name = "Record name is required";
+        if (!type.trim()) validationErrs.type = "Record type is required";
         setErrors(validationErrs);
         return Object.keys(validationErrs).length === 0;
     };
