@@ -9,6 +9,11 @@
     column-gap: 12px;
 }
 
+.pets-list-search input {
+    padding: 16px 8px;
+    width: 100%;
+}
+
 select {
     padding: 16px;
 }

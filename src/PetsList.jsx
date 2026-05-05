@@ -11,6 +11,7 @@ const PetsList = ({pets, records, onUpdate}) => {
     const [showAddPetModal, setShowAddPetModal] = useState(false);
     const [petList, setPetList] = useState(pets);
     const [recordsList, setRecordsList] = useState(records);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setPetList(pets);
@@ -48,8 +49,7 @@ const PetsList = ({pets, records, onUpdate}) => {
         if(selected === 'all') {
             setPetList(pets);
         } else {
-            const filtered = pets.filter(pet => pet.type === selected);
-            setPetList(filtered);
+            setPetList(pets.filter(pet => pet.type === selected));
         }
     }
 
@@ -64,9 +64,16 @@ const PetsList = ({pets, records, onUpdate}) => {
         if(selected === 'all') {
             setRecordsList(records);
         } else {
-            const filtered = records.filter(record => record.type === selected);
-            setRecordsList(filtered);
+            setRecordsList(records.filter(record => record.type === selected));
         }
+    }
+
+    const handleSearch = (event) => {
+        const str = event.target.value.toLowerCase();
+        setSearch(str);
+        setPetList(pets.filter(pet =>
+            pet.name.toLowerCase().includes(str) || pet.type.toLowerCase().includes(str)
+        ));
     }
 
     return (
@@ -85,6 +92,14 @@ const PetsList = ({pets, records, onUpdate}) => {
                                 return  <option key={op} value={op}>{op}</option>
                             })}
                         </select>
+                    </div>
+                    <div className="pets-list-search">
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={handleSearch}
+                            placeholder="Search by name or type"
+                        />
                     </div>
                 </div>
             </section>
