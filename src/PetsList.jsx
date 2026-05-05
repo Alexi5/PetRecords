@@ -4,7 +4,7 @@ import './styles/PetsList.css'
 import ModalComponent from "./Modal.jsx";
 import CreatePetForm from "./CreatePetForm.jsx";
 
-const PetsList = ({pets}) => {
+const PetsList = ({pets, onUpdate}) => {
     if(!pets) return;
 
     const [showAddPetModal, setShowAddPetModal] = useState(false);
@@ -23,6 +23,7 @@ const PetsList = ({pets}) => {
                     if(res.ok) {
                         console.log('record deleted')
                     }
+                    onUpdate();
                 })
                 .catch(err => console.log(err));
         }
@@ -72,7 +73,7 @@ const PetsList = ({pets}) => {
             </div>
 
             <ModalComponent isOpen={showAddPetModal} onClose={() => toggleAddPetModal(false)} label="Create Pet">
-                <CreatePetForm onClose={() => toggleAddPetModal(false)}></CreatePetForm>
+                <CreatePetForm onClose={() => toggleAddPetModal(false)} onUpdate={onUpdate}></CreatePetForm>
             </ModalComponent>
         </>
     )

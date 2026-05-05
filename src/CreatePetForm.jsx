@@ -1,7 +1,7 @@
 import './styles/CreatePetForm.css';
 import { useState } from 'react';
 
-const EditProfileForm = ({ onClose }) => {
+const EditProfileForm = ({ onClose, onUpdate }) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
     const [dob, setDOB] = useState("");
@@ -34,7 +34,8 @@ const EditProfileForm = ({ onClose }) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log('success', data)
+                console.log('pet created')
+                onUpdate()
                 onClose();
             })
             .catch(err => console.log(err));

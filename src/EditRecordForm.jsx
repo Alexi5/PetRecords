@@ -1,14 +1,14 @@
 import './styles/EditRecordForm.css';
 import { useState } from 'react';
 
-const EditRecordForm = ({ record, onClose }) => {
-    if(!record) return;
+const EditRecordForm = ({ record, onClose, onUpdate }) => {
+    // if(!record) return;
 
-    const [name, setName] = useState(record.name || "");
-    const [type, setType] = useState(record.type || "");
-    const [date_given, setDateGiven] = useState(record.dob || "");
-    const [reactions, setReactions] = useState(record.reactions || "");
-    const [severity, setSeverity] = useState(record.severity || "");
+    const [name, setName] = useState(record?.name || "");
+    const [type, setType] = useState(record?.type || "");
+    const [date_given, setDateGiven] = useState(record?.dob || "");
+    const [reactions, setReactions] = useState(record?.reactions || "");
+    const [severity, setSeverity] = useState(record?.severity || "");
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -49,6 +49,7 @@ const EditRecordForm = ({ record, onClose }) => {
             .then(res => res.json())
             .then(data => {
                 console.log('success', data)
+                onUpdate();
                 onClose();
             })
             .catch(err => console.log(err));
