@@ -28,11 +28,23 @@ import express from 'express'
 import db from './db.js'
 import cors from 'cors'
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(express.json())
 app.use(cors());
 
 app.listen(3001, () => console.log('Server running on port 3001'));
+
+app.use(express.static(path.resolve(__dirname, '../dist')));
+
+app.get('/{*path}', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+});
 
 // ================ PETS endpoint ================
 app.get('/api/pets', (req, res) => {
