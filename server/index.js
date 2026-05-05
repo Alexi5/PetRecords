@@ -35,7 +35,7 @@ app.use(cors());
 
 app.listen(3001, () => console.log('Server running on port 3001'));
 
-// pets endpoint
+// ================ PETS endpoint
 app.get('/api/pets', (req, res) => {
     const pets = db.prepare('SELECT * FROM pets').all();
 
@@ -50,6 +50,20 @@ app.get('/api/pets/:id', (req, res) => {
 
     res.json(pet)
 })
+
+app.post('/api/pets', (req, res) => {
+    const { name, type, dob } = req.body
+
+    if (!name || !type || !dob) return res.status(400).send('Missing pet info');
+
+    const allUsers = db.prepare('SELECT * FROM users').all()
+    const currentUser = allUsers[0];
+
+    const result = db.prepare('INSERT INTO pets (name, type, dob, owner_id) VALUES (?, ?, ?, ?)').run(name, type, dob, currentUser.id);
+    const createdPet = db.prepare('SELECT * FROM pets WHERE id = ?').get(result.lastInsertRowid);
+
+    res.json(createdPet);
+});
 
 app.put('/api/pets/:id', (req, res) => {
     const { id } = req.params;
@@ -66,20 +80,21 @@ app.put('/api/pets/:id', (req, res) => {
 });
 
 app.delete('/api/pets/:id', (req, res) => {
-    const { id } = req.param
+    const { id } = req.params
 
-    const pet = db.prepare('SELECT * FROM petws WHERE id = ?').get(id);
+    const pet = db.prepare('SELECT * FROM pets WHERE id = ?').get(id);
     if (!pet) return res.status(404).send('No pets found with id ' + id);
 
+    //delete records and pet
+    db.prepare('DELETE FROM records WHERE pet_id = ?').run(id);
     db.prepare('DELETE FROM pets WHERE id = ?').run(id);
 
     res.json({ message: 'Pet deleted successfully.' });
 });
 
-// Create
-// Delete
 
-// RECORDS endpoint
+
+// =================== RECORDS endpoint
 app.get('/api/records', (req, res) => {
     const petId = req.query.pet_id;
     const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
@@ -119,4 +134,3 @@ app.delete('/api/records/:id', (req, res) => {
     res.json({ message: 'Record deleted successfully.' });
 });
 
-// Create/Add (pet id)

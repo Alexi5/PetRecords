@@ -24,3 +24,8 @@
 .pets-table tbody tr {
     border-top: 1px solid #e0e0e0;
 }
+
+button.add-pet {
+    padding: 12px 24px;
+    font-size: 16px;
+}

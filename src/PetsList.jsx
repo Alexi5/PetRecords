@@ -1,10 +1,19 @@
 import { Link } from 'react-router-dom'
+import { useState } from 'react';
 import './styles/PetsList.css'
+import ModalComponent from "./Modal.jsx";
+import CreatePetForm from "./CreatePetForm.jsx";
 
 const PetsList = ({pets}) => {
     if(!pets) return;
 
-    const handleDelete = (recordId) => {
+    const [showAddPetModal, setShowAddPetModal] = useState(false);
+
+    const toggleAddPetModal = (setTo = null) => {
+        setShowAddPetModal(setTo || !showAddPetModal);
+    }
+
+    const handleDelete = (petId) => {
         const confirmDelete = confirm("Are you sure you want to delete this pet?")
         if (confirmDelete) {
             fetch(`/api/pets/${petId}`, {
@@ -24,6 +33,12 @@ const PetsList = ({pets}) => {
             <section className="spacer" />
             <h2>Pets List</h2>
             <br/>
+            <div className="pets-list-actions">
+                <button className="add-pet" onClick={() => toggleAddPetModal()}>Add Pet</button>
+            </div>
+            <br/>
+            <br/>
+
             <div className="pets-list-container">
                 <table className="pets-table">
                     <thead>
@@ -48,13 +63,17 @@ const PetsList = ({pets}) => {
                                 <p>{pet.dob || "unknown"}</p>
                             </td>
                             <td className="actions">
-                                <button onClick={() => handleDelete(record.id)}>Delete</button>
+                                <button onClick={() => handleDelete(pet.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
             </div>
+
+            <ModalComponent isOpen={showAddPetModal} onClose={() => toggleAddPetModal(false)} label="Create Pet">
+                <CreatePetForm onClose={() => toggleAddPetModal(false)}></CreatePetForm>
+            </ModalComponent>
         </>
     )
 }
