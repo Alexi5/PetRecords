@@ -97,7 +97,12 @@ app.delete('/api/pets/:id', (req, res) => {
 // ================ RECORDS endpoint ================
 app.get('/api/records', (req, res) => {
     const petId = req.query.pet_id;
-    const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
+    let records;
+    if(petId) {
+        records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
+    } else {
+        records = db.prepare('SELECT * FROM records').all();
+    }
     res.status(200).json(records);
 });
 

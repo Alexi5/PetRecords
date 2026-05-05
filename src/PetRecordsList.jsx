@@ -37,12 +37,15 @@ const PetRecordsList = ({ records, onUpdate, petId }) => {
         <>
             <section>
                 <div className="records-section">
-                    <h3>Record Management</h3>
+                    {petId && (
+                        <>
+                            <h3>Record Management</h3>
 
-                    <button onClick={() => openEditRecordModal()}>Add Record</button>
-                    <br/>
-                    <br/>
-
+                            <button onClick={() => openEditRecordModal()}>Add Record</button>
+                            <br/>
+                            <br/>
+                        </>
+                    )}
 
                     {records && (
                         <div className="records-list-container">

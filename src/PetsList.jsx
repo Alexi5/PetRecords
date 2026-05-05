@@ -3,15 +3,18 @@ import { useState, useEffect } from 'react';
 import './styles/PetsList.css'
 import ModalComponent from "./Modal.jsx";
 import CreatePetForm from "./CreatePetForm.jsx";
+import PetRecordsList from "./PetRecordsList.jsx";
 
-const PetsList = ({pets, onUpdate}) => {
+const PetsList = ({pets, records, onUpdate}) => {
     if(!pets) return;
 
     const [showAddPetModal, setShowAddPetModal] = useState(false);
     const [petList, setPetList] = useState(pets);
+    const [recordsList, setRecordsList] = useState(records);
 
     useEffect(() => {
         setPetList(pets);
+        setRecordsList(records)
     }, [pets]);
 
     const toggleAddPetModal = (setTo = null) => {
@@ -34,19 +37,35 @@ const PetsList = ({pets, onUpdate}) => {
         }
     }
 
-    const filterOptions = pets.map(pet => pet.type).reduce((acc, type) => {
+    const filterPetOptions = pets.map(pet => pet.type).reduce((acc, type) => {
         if(!acc.includes(type)) {
             acc.push(type);
         }
         return acc;
     }, []);
 
-    const filterList = (selected) => {
+    const filterPetsList = (selected) => {
         if(selected === 'all') {
             setPetList(pets);
         } else {
             const filtered = pets.filter(pet => pet.type === selected);
             setPetList(filtered);
+        }
+    }
+
+    const filterRecordOptions = records.map(rec => rec.type).reduce((acc, type) => {
+        if(!acc.includes(type)) {
+            acc.push(type);
+        }
+        return acc;
+    }, []);
+
+    const filterRecords = (selected) => {
+        if(selected === 'all') {
+            setRecordsList(records);
+        } else {
+            const filtered = records.filter(record => record.type === selected);
+            setRecordsList(filtered);
         }
     }
 
@@ -60,9 +79,9 @@ const PetsList = ({pets, onUpdate}) => {
                 <div className="pets-list-actions">
                     <button className="add-pet" onClick={() => toggleAddPetModal()}>Add Pet</button>
                     <div className="pets-list-filter">
-                        <select id="pet-type-filter" onChange={(e) => filterList(e.target.value)}>
+                        <select id="pet-type-filter" onChange={(e) => filterPetsList(e.target.value)}>
                             <option value="all">All</option>
-                            {filterOptions && filterOptions.map(op => {
+                            {filterPetOptions && filterPetOptions.map(op => {
                                 return  <option key={op} value={op}>{op}</option>
                             })}
                         </select>
@@ -71,9 +90,8 @@ const PetsList = ({pets, onUpdate}) => {
             </section>
 
             <br/>
-            <br/>
 
-            <div className="pets-list-container">
+            <section className="pets-list-container">
                 <table className="pets-table">
                     <thead>
                         <tr>
@@ -103,7 +121,32 @@ const PetsList = ({pets, onUpdate}) => {
                     ))}
                     </tbody>
                 </table>
-            </div>
+            </section>
+
+            <br/>
+            <br/>
+
+            <section className="pets-records-list-container">
+                <h2>Records List</h2>
+                <br/>
+
+                <section>
+                    <div className="pets-records-actions">
+                        <div className="pets-records-filter">
+                            <select id="pet-records-type-filter" onChange={(e) => filterRecords(e.target.value)}>
+                                <option value="all">All</option>
+                                {filterRecordOptions && filterRecordOptions.map(op => {
+                                    return <option key={op} value={op}>{op}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <br/>
+
+                <PetRecordsList records={recordsList} onUpdate={onUpdate} petId={null} />
+            </section>
 
             <ModalComponent isOpen={showAddPetModal} onClose={() => toggleAddPetModal(false)} label="Create Pet">
                 <CreatePetForm onClose={() => toggleAddPetModal(false)} onUpdate={onUpdate}></CreatePetForm>
