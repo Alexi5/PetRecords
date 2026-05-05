@@ -4,7 +4,7 @@ A pet health records management app built with React, Vite, and Express + SQLite
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20.19+ or 22.12+
 - npm
 
 ## Setup
