@@ -27,14 +27,12 @@
 import express from 'express'
 import db from './db.js'
 import cors from 'cors'
-import res from "express/lib/response.js";
 
-const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.json())
 app.use(cors());
 
-// ================ PETS endpoint
+// ================ PETS endpoint ================
 app.get('/api/pets', (req, res) => {
     const pets = db.prepare('SELECT * FROM pets').all();
 
@@ -47,7 +45,7 @@ app.get('/api/pets/:id', (req, res) => {
 
     if(!pet) return res.status(404).send('No pet found with id ' + id);
 
-    res.json(pet)
+    res.status(200).json(pet)
 })
 
 app.post('/api/pets', (req, res) => {
@@ -55,13 +53,15 @@ app.post('/api/pets', (req, res) => {
 
     if (!name || !type || !dob) return res.status(400).send('Missing pet info');
 
+    // Default to the first user
+    // Optimization, owner would be the user logged in that is creating the entry
     const allUsers = db.prepare('SELECT * FROM users').all()
     const currentUser = allUsers[0];
 
     const result = db.prepare('INSERT INTO pets (name, type, dob, owner_id) VALUES (?, ?, ?, ?)').run(name, type, dob, currentUser.id);
     const createdPet = db.prepare('SELECT * FROM pets WHERE id = ?').get(result.lastInsertRowid);
 
-    res.json(createdPet);
+    res.status(200).json(createdPet);
 });
 
 app.put('/api/pets/:id', (req, res) => {
@@ -74,7 +74,7 @@ app.put('/api/pets/:id', (req, res) => {
     db.prepare('UPDATE pets SET name = ?, type = ?, dob = ? WHERE id = ?').run(name, type, dob, id);
     const updatedPet = db.prepare('SELECT * FROM pets WHERE id = ?').get(id);
 
-    res.json(updatedPet);
+    res.status(200).json(updatedPet);
 });
 
 app.delete('/api/pets/:id', (req, res) => {
@@ -87,16 +87,16 @@ app.delete('/api/pets/:id', (req, res) => {
     db.prepare('DELETE FROM records WHERE pet_id = ?').run(id);
     db.prepare('DELETE FROM pets WHERE id = ?').run(id);
 
-    res.json({ message: 'Pet deleted successfully.' });
+    res.status(200).json({ message: 'Pet deleted successfully.' });
 });
 
 
 
-// =================== RECORDS endpoint
+// ================ RECORDS endpoint ================
 app.get('/api/records', (req, res) => {
     const petId = req.query.pet_id;
     const records = db.prepare('SELECT * FROM records WHERE pet_id = ?').all(petId);
-    res.json(records);
+    res.status(200).json(records);
 });
 
 app.post('/api/records', (req, res) => {
@@ -138,7 +138,7 @@ app.post('/api/records', (req, res) => {
     const result = db.prepare('INSERT INTO records (name, type, date_given, reactions, severity, pet_id) VALUES (?, ?, ?, ?, ?, ?)').run(name, type, validDateGiven, validReactions, validSeverity, pet.id);
     const createdRecord = db.prepare('SELECT * FROM records WHERE id = ?').get(result.lastInsertRowid);
 
-    res.json(createdRecord);
+    res.status(200).json(createdRecord);
 });
 
 app.put('/api/records/:id', (req, res) => {
@@ -152,15 +152,17 @@ app.put('/api/records/:id', (req, res) => {
     // validate allergy
     const validReactions = reactions || null;
     const validSeverity = severity || null;
-
-    if(type === 'allergy' && !validReactions && !validSeverity) {
-        return res.status(404).send('Allergy record must include reactions and severity');
+    if(type === 'allergy' && !(validReactions && validSeverity)) {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'Allergy record must include reactions and severity'
+        });
     }
 
     db.prepare('UPDATE records SET name = ?, type = ?, date_given = ?, reactions = ?,  severity = ? WHERE id = ?').run(name, type, date_given, validReactions, validSeverity, id);
     const updatedRecord = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
 
-    res.json(updatedRecord);
+    res.status(200).json(updatedRecord);
 });
 
 app.delete('/api/records/:id', (req, res) => {
@@ -171,6 +173,6 @@ app.delete('/api/records/:id', (req, res) => {
 
     db.prepare('DELETE FROM records WHERE id = ?').run(id);
 
-    res.json({ message: 'Record deleted successfully.' });
+    res.status(200).json({ message: 'Record deleted successfully.' });
 });
 
