@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './styles/PetsList.css'
 import ModalComponent from "./Modal.jsx";
 import CreatePetForm from "./CreatePetForm.jsx";
@@ -8,6 +8,11 @@ const PetsList = ({pets, onUpdate}) => {
     if(!pets) return;
 
     const [showAddPetModal, setShowAddPetModal] = useState(false);
+    const [petList, setPetList] = useState(pets);
+
+    useEffect(() => {
+        setPetList(pets);
+    }, [pets]);
 
     const toggleAddPetModal = (setTo = null) => {
         setShowAddPetModal(setTo || !showAddPetModal);
@@ -29,14 +34,42 @@ const PetsList = ({pets, onUpdate}) => {
         }
     }
 
+    const filterOptions = pets.map(pet => pet.type).reduce((acc, type) => {
+        if(!acc.includes(type)) {
+            acc.push(type);
+        }
+        return acc;
+    }, []);
+
+    const filterList = (selected) => {
+        if(selected === 'all') {
+            setPetList(pets);
+        } else {
+            const filtered = pets.filter(pet => pet.type === selected);
+            setPetList(filtered);
+        }
+    }
+
     return (
         <>
             <section className="spacer" />
             <h2>Pets List</h2>
             <br/>
-            <div className="pets-list-actions">
-                <button className="add-pet" onClick={() => toggleAddPetModal()}>Add Pet</button>
-            </div>
+
+            <section>
+                <div className="pets-list-actions">
+                    <button className="add-pet" onClick={() => toggleAddPetModal()}>Add Pet</button>
+                    <div className="pets-list-filter">
+                        <select id="pet-type-filter" onChange={(e) => filterList(e.target.value)}>
+                            <option value="all">All</option>
+                            {filterOptions && filterOptions.map(op => {
+                                return  <option key={op} value={op}>{op}</option>
+                            })}
+                        </select>
+                    </div>
+                </div>
+            </section>
+
             <br/>
             <br/>
 
@@ -50,7 +83,7 @@ const PetsList = ({pets, onUpdate}) => {
                         </tr>
                     </thead>
                     <tbody>
-                    {pets.length > 0 && pets.map((pet) => (
+                    {petList.length > 0 && petList.map((pet) => (
                         <tr key={pet.id}>
                             <td>
                                 <Link to={`/pets/${pet.id}`}>

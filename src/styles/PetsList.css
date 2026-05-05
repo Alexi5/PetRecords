@@ -2,6 +2,17 @@
     padding: 0 48px;
 }
 
+.pets-list-actions {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    column-gap: 12px;
+}
+
+select {
+    padding: 16px;
+}
+
 .pets-table {
     width: 100%;
     border-collapse: collapse;
