@@ -27,6 +27,7 @@
 import express from 'express'
 import db from './db.js'
 import cors from 'cors'
+import res from "express/lib/response.js";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -70,7 +71,6 @@ app.put('/api/pets/:id', (req, res) => {
     const { name, type, dob } = req.body
 
     const pet = db.prepare('SELECT * FROM pets WHERE id = ?').get(id);
-
     if (!pet) return res.status(404).send('No pet found with id ' + id);
 
     db.prepare('UPDATE pets SET name = ?, type = ?, dob = ? WHERE id = ?').run(name, type, dob, id);
@@ -101,6 +101,48 @@ app.get('/api/records', (req, res) => {
     res.json(records);
 });
 
+app.post('/api/records', (req, res) => {
+    const { name, type, date_given, reactions, severity, pet_id } = req.body
+
+    if (!name || !type) {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'Record name and type required'
+        });
+    }
+
+    const validDateGiven = date_given || null;
+    if (type === 'vaccine' && !date_given ) {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'Vaccine record must include date administered'
+        });
+    }
+    // validate allergy
+    const validReactions = reactions || null;
+    const validSeverity = severity || null;
+    if(type === 'allergy' && !(validReactions && validSeverity)) {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'Allergy record must include reactions and severity'
+        });
+    }
+
+    if (!pet_id) {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'No pet_id',
+        });
+    }
+    const pet = db.prepare('SELECT * FROM pets WHERE id = ?').get(pet_id);
+    if (!pet) return res.status(404).send('No pet found with id ' + pet_id);
+
+    const result = db.prepare('INSERT INTO records (name, type, date_given, reactions, severity, pet_id) VALUES (?, ?, ?, ?, ?, ?)').run(name, type, validDateGiven, validReactions, validSeverity, pet.id);
+    const createdRecord = db.prepare('SELECT * FROM records WHERE id = ?').get(result.lastInsertRowid);
+
+    res.json(createdRecord);
+});
+
 app.put('/api/records/:id', (req, res) => {
     const { id } = req.params;
     const { name, type, date_given, reactions, severity } = req.body
@@ -124,7 +166,7 @@ app.put('/api/records/:id', (req, res) => {
 });
 
 app.delete('/api/records/:id', (req, res) => {
-    const { id } = req.param
+    const { id } = req.params
 
     const record = db.prepare('SELECT * FROM records WHERE id = ?').get(id);
     if (!record) return res.status(404).send('No record found with id ' + id);

@@ -4,7 +4,7 @@ import "./styles/PetProfile.css"
 import ModalComponent from "./Modal"
 import EditRecordForm from "./EditRecordForm.jsx";
 
-const PetRecordsList = ({ records, onUpdate }) => {
+const PetRecordsList = ({ records, onUpdate, petId }) => {
     const [showEditRecord, setShowEditRecord] = useState(false);
     const [editRecord, setEditRecord] = useState(null);
 
@@ -89,7 +89,7 @@ const PetRecordsList = ({ records, onUpdate }) => {
             </section>
 
             <ModalComponent isOpen={showEditRecord} onClose={handleCloseModal} label={`${editRecord ? "Edit" : "Create"} Record`}>
-                <EditRecordForm record={editRecord} onClose={handleCloseModal} onUpdate={onUpdate}></EditRecordForm>
+                <EditRecordForm record={editRecord} petId={petId} onClose={handleCloseModal} onUpdate={onUpdate}></EditRecordForm>
             </ModalComponent>
         </>
     )
