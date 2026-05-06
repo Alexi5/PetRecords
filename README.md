@@ -37,6 +37,10 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
+
+## Live Demo
+https://petrecords-production.up.railway.app
+
 ## Dev Decisions
 
 - `better-sqlite` library: synchronous api for small test app. Trade offs, if high volume of users making requests, choose a different library/db set up 
