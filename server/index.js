@@ -40,12 +40,6 @@ app.use(cors());
 
 app.listen(3001, () => console.log('Server running on port 3001'));
 
-app.use(express.static(path.resolve(__dirname, '../dist')));
-
-app.get('/{*path}', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
-});
-
 // ================ PETS endpoint ================
 app.get('/api/pets', (req, res) => {
     const pets = db.prepare('SELECT * FROM pets').all();
@@ -194,4 +188,11 @@ app.delete('/api/records/:id', (req, res) => {
 
     res.status(200).json({ message: 'Record deleted successfully.' });
 });
+
+app.use(express.static(path.resolve(__dirname, '../dist')));
+
+app.get('/{*path}', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+});
+
 
