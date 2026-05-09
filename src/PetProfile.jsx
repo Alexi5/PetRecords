@@ -69,7 +69,7 @@ const PetProfile = () => {
             <PetRecordsList records={records} onUpdate={fetchRecords} petId={pet.id} />
 
             <ModalComponent isOpen={editProfile} onClose={handleCloseModal} label="Edit Profile">
-                <EditProfileForm pet={pet} onClose={handleCloseModal}></EditProfileForm>
+                <EditProfileForm pet={pet} onClose={handleCloseModal} onUpdate={fetchPets}></EditProfileForm>
             </ModalComponent>
         </>
     )

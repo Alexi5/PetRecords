@@ -1,7 +1,7 @@
 import './styles/EditProfileForm.css';
 import { useState } from 'react';
 
-const EditProfileForm = ({ pet, onClose }) => {
+const EditProfileForm = ({ pet, onClose, onUpdate }) => {
     if(!pet) return;
 
     const [name, setName] = useState(pet.name || "");
@@ -37,6 +37,7 @@ const EditProfileForm = ({ pet, onClose }) => {
             .then(res => res.json())
             .then(data => {
                 console.log('success', data)
+                onUpdate();
                 onClose();
             })
             .catch(err => console.log(err));
